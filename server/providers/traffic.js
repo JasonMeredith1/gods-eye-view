@@ -132,8 +132,8 @@ export function tomtomProxy() {
 
   async function fetchUpstream(z, x, y) {
     const url =
-      'https://api.tomtom.com/traffic/map/4/tile/flow/relative/' +
-      `${z}/${x}/${y}.pbf?key=${encodeURIComponent(process.env.TOMTOM_API_KEY)}`;
+      'https://api.tomtom.com/maps/orbis/traffic/flow/vector/tile/' +
+      `${z}/${x}/${y}?apiVersion=2&key=${encodeURIComponent(process.env.TOMTOM_API_KEY)}`;
     recordUpstreamFetch(); // attempts count — upstream bills the request either way
     const res = await fetch(url, {
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
