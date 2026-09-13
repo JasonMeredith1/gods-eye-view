@@ -8,6 +8,7 @@ import {
   buildSyntheticCctvSvg,
   proxyMediaResponse,
   fetchCctvImageFromUpstream,
+  fetchTxdotSnapshot,
   fetchCctvMediaUpstream,
 } from './cctv/media.js';
 import { CCTV_FRAME_FETCH_TIMEOUT_MS } from './cctv/constants.js';
@@ -328,7 +329,9 @@ export function cctvProxy({ sourceRoot = process.cwd() } = {}) {
             : '');
 
         const upstreamImage =
-          await fetchCctvImageFromUpstream(upstreamCandidate);
+          source?.sourceKind === 'txdot-transguide'
+            ? await fetchTxdotSnapshot(upstreamCandidate)
+            : await fetchCctvImageFromUpstream(upstreamCandidate);
         if (upstreamImage?.ok) {
           setHealth(cameraId, {
             status: 'ok',
