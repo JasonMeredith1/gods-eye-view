@@ -8,6 +8,7 @@ import {
 import { normalizeSourceItem } from './normalize.js';
 import {
   loadAustinSourcesFromOpenData,
+  loadTxdotSanAntonioSources,
   loadCaltransSourcesFromOpenData,
   loadTflSourcesFromOpenData,
 } from './sources.js';
@@ -113,17 +114,21 @@ export function createCctvCatalog({ sourceRoot = process.cwd() } = {}) {
       String(process.env.CCTV_TFL_ENABLED || '1').trim() !== '0';
 
     let fromAustin = [];
+    let fromTxdotSat = [];
     let fromCaltrans = [];
     let fromTfl = [];
     if (needsLiveSources) {
-      const [austinResult, caltransResult, tflResult] =
+      const [austinResult, txdotResult, caltransResult, tflResult] =
         await Promise.allSettled([
           loadAustinSourcesFromOpenData(),
+          loadTxdotSanAntonioSources(),
           loadCaltransSourcesFromOpenData(),
           tflEnabled ? loadTflSourcesFromOpenData() : Promise.resolve([]),
         ]);
       fromAustin =
         austinResult.status === 'fulfilled' ? austinResult.value : [];
+      fromTxdotSat =
+        txdotResult.status === 'fulfilled' ? txdotResult.value : [];
       fromCaltrans =
         caltransResult.status === 'fulfilled' ? caltransResult.value : [];
       fromTfl = tflResult.status === 'fulfilled' ? tflResult.value : [];
@@ -131,6 +136,7 @@ export function createCctvCatalog({ sourceRoot = process.cwd() } = {}) {
     // Live sources first so file/env overrides win on duplicate IDs (Map last-write).
     const merged = [
       ...fromAustin,
+      ...fromTxdotSat,
       ...fromCaltrans,
       ...fromTfl,
       ...fromFile,
