@@ -17,7 +17,7 @@ export const TXDOT_SAT_CCTV_STATUS_URL =
 export const TXDOT_CCTV_SNAPSHOT_URL =
   'https://its.txdot.gov/its/DistrictIts/GetCctvSnapshotByIcdId';
 
-export const DEFAULT_TXDOT_SAT_MAX_SOURCES = 300;
+export const DEFAULT_TXDOT_SAT_MAX_SOURCES = 320;
 
 /** Downtown San Antonio anchor for source prioritization. */
 export const SAN_ANTONIO_CENTER = {
