@@ -4,7 +4,12 @@ import path from 'node:path';
 // Overpass API proxy constants and cache state
 // ---------------------------------------------------------------------------
 /** Ordered list of Overpass API mirrors; tried sequentially on failure/rate-limit. */
+const nextgisKey = process.env.NEXTGIS_API_KEY;
+
 const OVERPASS_UPSTREAMS = [
+  ...(nextgisKey
+    ? [`https://overpass.nextgis.com/${encodeURIComponent(nextgisKey)}/api/interpreter`]
+    : []),
   'https://overpass-api.de/api/interpreter',
   'https://overpass.kumi.systems/api/interpreter',
   'https://lz4.overpass-api.de/api/interpreter',

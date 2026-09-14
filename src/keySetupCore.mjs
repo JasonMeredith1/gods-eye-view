@@ -80,6 +80,14 @@ export const KEY_SETUP_KEYS = Object.freeze([
     tier: 'free',
   }),
   Object.freeze({
+    id: 'nextgis',
+    title: 'NEXTGIS',
+    unlocks: 'Reliable global Overpass road data',
+    getUrl: 'https://nextgis.com',
+    envVars: Object.freeze(['NEXTGIS_API_KEY']),
+    tier: 'free',
+  }),
+  Object.freeze({
     id: 'cesium-ion',
     title: 'CESIUM ION',
     unlocks: 'Bing imagery map stacks + world terrain',

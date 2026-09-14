@@ -43,7 +43,10 @@ function sendOverpassResponse(res, payload, cacheStatus = 'MISS') {
     'Content-Type': payload.contentType || 'application/json',
     'Cache-Control': 'public, max-age=15',
     'X-Overpass-Cache': cacheStatus,
-    'X-Overpass-Upstream': payload.endpoint || 'unknown',
+    'X-Overpass-Upstream':
+      payload.endpoint?.includes('overpass.nextgis.com')
+        ? 'nextgis'
+        : payload.endpoint || 'unknown',
   });
   res.end(payload.body || '');
 }

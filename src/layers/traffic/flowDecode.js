@@ -47,13 +47,18 @@ export function decodeFlowTile(data, z, x, y) {
     const props = feature.properties || {};
     const closure =
       props.road_closure === true || props.road_closure === 'true';
-    const rawLevel = props.traffic_level;
+    const rawLevel = props.relative_speed ?? props.traffic_level;
     const hasLevel = typeof rawLevel === 'number' && Number.isFinite(rawLevel);
     // Skip features we can't color — unless closed (closures render dot-free
     // regardless of level, so they stay useful without one).
     if (!hasLevel && !closure) continue;
     const trafficLevel = hasLevel ? Math.min(1, Math.max(0, rawLevel)) : 0;
-    const roadType = typeof props.road_type === 'string' ? props.road_type : '';
+    const roadType =
+      typeof props.road_category === 'string'
+        ? props.road_category
+        : typeof props.road_type === 'string'
+          ? props.road_type
+          : '';
 
     const lines =
       geometry.type === 'LineString'

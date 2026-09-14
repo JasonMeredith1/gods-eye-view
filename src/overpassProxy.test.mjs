@@ -1,3 +1,4 @@
+import { OVERPASS_UPSTREAMS } from '../server/providers/overpass/constants.js';
 // OVERPASS PROXY — which upstream answers count as an answer.
 //
 // One predicate governs cache reads, writes, and stale fallback. A mirror's
@@ -214,7 +215,7 @@ test('coalesced outage callers both receive last-good data, never a cached refus
         assert.equal(response.body, DATA.body);
         assert.equal(response.headers['X-Overpass-Cache'], 'STALE');
       }
-      assert.equal(fetches, 4, 'one shared, bounded mirror sequence');
+      assert.equal(fetches, OVERPASS_UPSTREAMS.length, 'one shared, bounded mirror sequence');
       assert.deepEqual(JSON.parse(await readFile(file, 'utf8')), stale);
     } finally {
       release.resolve();
