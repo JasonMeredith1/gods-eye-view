@@ -1244,7 +1244,10 @@ function _drawOverlay(frame) {
       continue;
     }
 
-    const primary = String(obj.id || '');
+    const primary =
+      obj.type === 'VEH'
+        ? `[  ] ${String(obj.id || '')}`
+        : String(obj.id || '');
     const micro = String(obj.metric || '');
     if (!primary && !micro) continue;
     const layerId = obj._layerId || 'unknown';
