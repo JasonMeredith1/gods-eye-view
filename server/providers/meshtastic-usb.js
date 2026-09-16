@@ -11,7 +11,9 @@ const POSITION_APP = 3;
 const NODEINFO_APP = 4;
 
 function nodeIdFromNum(num) {
-  return `!${Number(num >>> 0).toString(16).padStart(8, '0')}`;
+  return `!${Number(num >>> 0)
+    .toString(16)
+    .padStart(8, '0')}`;
 }
 
 function createCodec() {
@@ -104,11 +106,7 @@ function frame(payload) {
   return Buffer.concat([header, Buffer.from(payload)]);
 }
 
-export function createMeshtasticUsb({
-  path,
-  ingest,
-  onState = () => {},
-} = {}) {
+export function createMeshtasticUsb({ path, ingest, onState = () => {} } = {}) {
   if (!path) throw new TypeError('Meshtastic USB path required');
   if (typeof ingest !== 'function')
     throw new TypeError('Meshtastic USB ingest callback required');
@@ -133,8 +131,7 @@ export function createMeshtasticUsb({
   }
 
   function requestConfig() {
-    configNonce =
-      (Math.floor(Math.random() * 0xfffffffe) + 1) >>> 0;
+    configNonce = (Math.floor(Math.random() * 0xfffffffe) + 1) >>> 0;
 
     send({
       want_config_id: configNonce,
@@ -145,9 +142,7 @@ export function createMeshtasticUsb({
       configNonce,
     });
 
-    console.log(
-      `[Meshtastic USB] requesting node DB (nonce ${configNonce})`,
-    );
+    console.log(`[Meshtastic USB] requesting node DB (nonce ${configNonce})`);
   }
 
   function observationFromNodeInfo(info) {
@@ -193,13 +188,9 @@ export function createMeshtasticUsb({
       latitude: lat,
       longitude: lon,
 
-      altitude:
-        pos.altitude === undefined
-          ? null
-          : Number(pos.altitude),
+      altitude: pos.altitude === undefined ? null : Number(pos.altitude),
 
-      positionPrecision:
-        rawPrecision > 0 ? rawPrecision : null,
+      positionPrecision: rawPrecision > 0 ? rawPrecision : null,
 
       positionPrecisionRaw: rawPrecision,
 
@@ -207,15 +198,9 @@ export function createMeshtasticUsb({
       roleCode: Number(user.role || 0),
 
       channelIndex: Number(info.channel || 0),
-      hopsAway:
-        info.hops_away === undefined
-          ? null
-          : Number(info.hops_away),
+      hopsAway: info.hops_away === undefined ? null : Number(info.hops_away),
 
-      snr:
-        info.snr === undefined
-          ? null
-          : Number(info.snr),
+      snr: info.snr === undefined ? null : Number(info.snr),
 
       heardOnCurrentLora: Boolean(info.heard_on_current_lora),
       viaMqtt: Boolean(info.via_mqtt),
@@ -357,9 +342,7 @@ export function createMeshtasticUsb({
         nodeDbCount: nodeDb.size,
       });
 
-      console.log(
-        `[Meshtastic USB] node DB ready: ${nodeDb.size} entries`,
-      );
+      console.log(`[Meshtastic USB] node DB ready: ${nodeDb.size} entries`);
     }
   }
 
@@ -460,7 +443,7 @@ export function createMeshtasticUsb({
       heartbeatTimer = setInterval(() => {
         send({
           heartbeat: {
-            nonce: (Date.now() >>> 0),
+            nonce: Date.now() >>> 0,
           },
         });
       }, 60000);
@@ -477,10 +460,7 @@ export function createMeshtasticUsb({
         error: error.message,
       });
 
-      console.warn(
-        '[Meshtastic USB] serial error:',
-        error.message,
-      );
+      console.warn('[Meshtastic USB] serial error:', error.message);
     });
 
     port.on('close', () => {

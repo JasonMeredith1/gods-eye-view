@@ -137,9 +137,7 @@ function createNodeStore() {
       lastSeen: record.lastSeen,
       reportCount: record.reportCount,
       freshness:
-        primary.retained && !local
-          ? 'retained'
-          : freshness(record.lastSeen),
+        primary.retained && !local ? 'retained' : freshness(record.lastSeen),
     };
   }
 
@@ -197,10 +195,8 @@ function decodePublicMapReport(payload, { retained = false } = {}) {
     longName: report.long_name || null,
     shortName: report.short_name || null,
 
-    latitude:
-      hasLat && hasLon ? Number(report.latitude_i) * 1e-7 : null,
-    longitude:
-      hasLat && hasLon ? Number(report.longitude_i) * 1e-7 : null,
+    latitude: hasLat && hasLon ? Number(report.latitude_i) * 1e-7 : null,
+    longitude: hasLat && hasLon ? Number(report.longitude_i) * 1e-7 : null,
 
     altitude: hasOwn(report, 'altitude') ? Number(report.altitude) : null,
 
@@ -242,11 +238,9 @@ export function meshtasticProxy() {
 
   const enabled = envBool('MESHTASTIC_ENABLED', false);
 
-  const mqttEnabled =
-    enabled && envBool('MESHTASTIC_MQTT_ENABLED', true);
+  const mqttEnabled = enabled && envBool('MESHTASTIC_MQTT_ENABLED', true);
 
-  const usbEnabled =
-    enabled && envBool('MESHTASTIC_USB_ENABLED', false);
+  const usbEnabled = enabled && envBool('MESHTASTIC_USB_ENABLED', false);
 
   const usbPort = process.env.MESHTASTIC_USB_PORT || '';
 
@@ -270,23 +264,17 @@ export function meshtasticProxy() {
     if (!mqttEnabled || client) return;
 
     const url =
-      process.env.MESHTASTIC_MQTT_URL ||
-      'mqtts://mqtt.meshtastic.org:8883';
+      process.env.MESHTASTIC_MQTT_URL || 'mqtts://mqtt.meshtastic.org:8883';
 
-    const topic =
-      process.env.MESHTASTIC_MQTT_TOPIC ||
-      'msh/US/2/map/';
+    const topic = process.env.MESHTASTIC_MQTT_TOPIC || 'msh/US/2/map/';
 
     client = mqtt.connect(url, {
-      username:
-        process.env.MESHTASTIC_MQTT_USER || 'meshdev',
+      username: process.env.MESHTASTIC_MQTT_USER || 'meshdev',
 
-      password:
-        process.env.MESHTASTIC_MQTT_PASSWORD || 'large4cats',
+      password: process.env.MESHTASTIC_MQTT_PASSWORD || 'large4cats',
 
       // We already verified this identifier against the public broker.
-      clientId:
-        process.env.MESHTASTIC_MQTT_CLIENT_ID || 'meshdev',
+      clientId: process.env.MESHTASTIC_MQTT_CLIENT_ID || 'meshdev',
 
       clean: true,
       protocolVersion: 4,
@@ -299,17 +287,12 @@ export function meshtasticProxy() {
       state.mqttConnected = true;
       state.mqttLastError = null;
 
-      console.log(
-        `[Meshtastic] MQTT connected; subscribing to ${topic}`,
-      );
+      console.log(`[Meshtastic] MQTT connected; subscribing to ${topic}`);
 
       client.subscribe(topic, { qos: 0 }, (error) => {
         if (error) {
           state.mqttLastError = error.message;
-          console.warn(
-            '[Meshtastic] MQTT subscribe failed:',
-            error.message,
-          );
+          console.warn('[Meshtastic] MQTT subscribe failed:', error.message);
         }
       });
     });
@@ -399,10 +382,7 @@ export function meshtasticProxy() {
       state.usbConnected = false;
       state.usbLastError = error?.message || String(error);
 
-      console.warn(
-        '[Meshtastic] USB startup failed:',
-        state.usbLastError,
-      );
+      console.warn('[Meshtastic] USB startup failed:', state.usbLastError);
 
       usb = null;
     }
@@ -422,10 +402,7 @@ export function meshtasticProxy() {
     }
 
     server.middlewares.use('/api/meshtastic', async (req, res) => {
-      const requestUrl = new URL(
-        req.url || '/',
-        'http://localhost',
-      );
+      const requestUrl = new URL(req.url || '/', 'http://localhost');
 
       if (requestUrl.pathname === '/status') {
         return sendJson(res, 200, {
@@ -439,9 +416,7 @@ export function meshtasticProxy() {
             nodeCount: store.countBySource('public_mqtt'),
             lastMessageAt: state.mqttLastMessageAt,
             lastError: state.mqttLastError,
-            topic:
-              process.env.MESHTASTIC_MQTT_TOPIC ||
-              'msh/US/2/map/',
+            topic: process.env.MESHTASTIC_MQTT_TOPIC || 'msh/US/2/map/',
           },
 
           usb: {
@@ -493,10 +468,7 @@ export function meshtasticProxy() {
       try {
         usb.close();
       } catch (error) {
-        console.warn(
-          '[Meshtastic] USB close failed:',
-          error?.message || error,
-        );
+        console.warn('[Meshtastic] USB close failed:', error?.message || error);
       }
 
       usb = null;

@@ -106,8 +106,10 @@ export function createMeshtasticLayer({ source } = {}) {
               pixelOffset: new Cesium.Cartesian2(0, -18),
               heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
               disableDepthTestDistance: Number.POSITIVE_INFINITY,
-              distanceDisplayCondition:
-                new Cesium.DistanceDisplayCondition(0, 250000),
+              distanceDisplayCondition: new Cesium.DistanceDisplayCondition(
+                0,
+                250000,
+              ),
             },
 
             description: `
