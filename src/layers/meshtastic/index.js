@@ -2,6 +2,15 @@ import * as Cesium from 'cesium';
 
 export { createMeshtasticSource } from './source.js';
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 export function createMeshtasticLayer({ source } = {}) {
   if (typeof source?.getSnapshot !== 'function') {
     throw new TypeError('Meshtastic requires a snapshot source');
@@ -104,14 +113,14 @@ export function createMeshtasticLayer({ source } = {}) {
             description: `
               <table class="cesium-infoBox-defaultTable">
                 <tbody>
-                  <tr><th>Name</th><td>${node.longName || 'Unknown'}</td></tr>
-                  <tr><th>Node</th><td>${node.id}</td></tr>
-                  <tr><th>Source</th><td>${node.source}</td></tr>
-                  <tr><th>Freshness</th><td>${node.freshness}</td></tr>
-                  <tr><th>Channel</th><td>${node.channel || 'Unknown'}</td></tr>
-                  <tr><th>Firmware</th><td>${node.firmwareVersion || 'Unknown'}</td></tr>
-                  <tr><th>Precision</th><td>${node.positionPrecision ?? 'Unknown'}</td></tr>
-                  <tr><th>Local nodes</th><td>${node.localNodeCount ?? 'Unknown'}</td></tr>
+                  <tr><th>Name</th><td>${escapeHtml(node.longName || 'Unknown')}</td></tr>
+                  <tr><th>Node</th><td>${escapeHtml(node.id)}</td></tr>
+                  <tr><th>Source</th><td>${escapeHtml(node.source)}</td></tr>
+                  <tr><th>Freshness</th><td>${escapeHtml(node.freshness)}</td></tr>
+                  <tr><th>Channel</th><td>${escapeHtml(node.channel || 'Unknown')}</td></tr>
+                  <tr><th>Firmware</th><td>${escapeHtml(node.firmwareVersion || 'Unknown')}</td></tr>
+                  <tr><th>Precision</th><td>${escapeHtml(node.positionPrecision ?? 'Unknown')}</td></tr>
+                  <tr><th>Local nodes</th><td>${escapeHtml(node.localNodeCount ?? 'Unknown')}</td></tr>
                 </tbody>
               </table>
             `,
